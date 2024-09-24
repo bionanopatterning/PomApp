@@ -137,7 +137,7 @@ grid_response = AgGrid(
     filtered_df,
     gridOptions=grid_options,
     update_mode=GridUpdateMode.SELECTION_CHANGED,
-    height=600,
+    height=900,
     theme="streamlit",
     allow_unsafe_jscode=True,  # Allow HTML rendering for clickable links
 )

@@ -55,14 +55,15 @@ with column_base:
             tomo_name = tomo_names[idx]
             st.query_params["tomo_id"] = tomo_name
     with c2:
-        st.markdown(f'<div style="text-align: center;font-size: 30px;"><b>{tomo_name}\n\n</b></div>', unsafe_allow_html=True)
-        st.text("")
+        tomo_title_field = st.empty()
     with c3:
         if st.button("\>"):
             idx = tomo_names.index(tomo_name)
             idx = (idx + 1) % len(tomo_names)
             tomo_name = tomo_names[idx]
             st.query_params["tomo_id"] = tomo_name
+
+    tomo_title_field = st.markdown(f'<div style="text-align: center;font-size: 30px;"><b>{tomo_name}\n\n</b></div>', unsafe_allow_html=True)
     c1, c2, c3 = st.columns([5, 5, 5])
     with c1:
         st.image(get_image(tomo_name, "density").transpose(Image.FLIP_TOP_BOTTOM), use_column_width=True,
