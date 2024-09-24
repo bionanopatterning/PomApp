@@ -34,7 +34,7 @@ def recolor(color, style=0):
         return color
 
 
-feature_library = parse_feature_library("C:/Users/mgflast/.Ais/feature_library.txt")
+feature_library = parse_feature_library("feature_library.txt")
 df = pd.read_excel(os.path.join(project_configuration["root"], "summary.xlsx"), index_col=0)
 df = df.dropna(axis=0)
 
