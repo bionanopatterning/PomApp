@@ -27,7 +27,8 @@ with open("project_configuration.json", 'r') as f:
 
 
 def get_image(tomo, image):
-    img_path = os.path.join("images", image, f"{tomo}_bin2_{image}.png")
+    image_dir = image.split("_")[0]
+    img_path = os.path.join("images", image_dir, f"{tomo}_{image}.png")
     if os.path.exists(img_path):
         return Image.open(img_path)
     else:
