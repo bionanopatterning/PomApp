@@ -102,7 +102,7 @@ with c2:
     for i in range(len(pie_data) // 2):
         rearranged_pie_data.append(pie_data[i])
         rearranged_pie_data.append(pie_data[-(i + 1)])
-    if len(pie_data) % 2 == 0:
+    if len(pie_data) % 2 == 1:
         rearranged_pie_data.append(pie_data[len(pie_data) // 2])
     # Unpack the rearranged data into separate lists
     pie_data = dict()
