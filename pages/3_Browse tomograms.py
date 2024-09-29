@@ -36,8 +36,27 @@ def recolor(color, style=0):
 
 
 feature_library = parse_feature_library("feature_library.txt")
-df = pd.read_excel(os.path.join(project_configuration["root"], "summary.xlsx"), index_col=0)
-df = df.dropna(axis=0)
+
+@st.cache_data
+def load_data():
+    cache_df = pd.read_excel(os.path.join(project_configuration["root"], "summary.xlsx"), index_col=0)
+    cache_df = cache_df.dropna(axis=0)
+    to_drop = list()
+    for f in project_configuration["macromolecules"] + ["Thickness (nm)", "Thickness error (nm)"]:
+        to_drop.append(f)
+    cache_df = cache_df.drop(columns=to_drop)
+    cache_rank_df = cache_df.rank(axis=0, ascending=False)
+
+    return cache_df, cache_rank_df
+
+df, rank_df = load_data()
+
+
+def rank_distance_series(tomo_name, rank_df):
+    m_ranks = rank_df.loc[tomo_name]
+    distances = rank_df.apply(lambda row: np.sum((row - m_ranks)**2), axis=1)
+    sorted_distances = distances.sort_values()
+    return sorted_distances
 
 # Query params
 tomo_name = df.index[0]
@@ -73,6 +92,29 @@ with column_base:
         st.image(get_image(tomo_name, "Macromolecules"), use_column_width=True, caption="Macromolecules")
     with c3:
         st.image(get_image(tomo_name, "Top3"), use_column_width=True, caption="Top 3 ontologies")
+
+    ranked_distance_series = rank_distance_series(tomo_name, rank_df)
+    c1, c2 = st.columns([5, 5])
+    with c1:
+        st.markdown(
+            f'<div style="text-align: center;margin-bottom: -15px; font-size: 14px;"><b>Most similar tomograms</b></div>',
+            unsafe_allow_html=True)
+        for j in range(3):
+            t_name = ranked_distance_series.index[1 + j]
+            t_link = f"/Browse_tomograms?tomo_id={t_name}"
+            st.markdown(
+                f"<p style='text-align: center; margin-bottom: -20px;font-size: 12px;'><a href='{t_link}'>{t_name}</a></p>",
+                unsafe_allow_html=True)
+    with c2:
+        st.markdown(
+            f'<div style="text-align: center;margin-top: 5px; margin-bottom: -15px; font-size: 14px;"><b>Most dissimilar tomograms:</b></div>',
+            unsafe_allow_html=True)
+        for j in range(3):
+            t_name = ranked_distance_series.index[-(j + 1)]
+            t_link = f"/Browse_tomograms?tomo_id={t_name}"
+            st.markdown(
+                f"<p style='text-align: center; margin-bottom: -20px;font-size: 12px;'><a href='{t_link}'>{t_name}</a></p>",
+                unsafe_allow_html=True)
 
     st.text("")
     ontologies = df.loc[tomo_name].sort_values(ascending=False).index.tolist()
