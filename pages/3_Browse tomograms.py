@@ -43,7 +43,8 @@ def load_data():
     cache_df = cache_df.dropna(axis=0)
     to_drop = list()
     for f in project_configuration["macromolecules"] + ["Thickness (nm)", "Thickness error (nm)"]:
-        to_drop.append(f)
+        if f in cache_df.columns:
+            to_drop.append(f)
     cache_df = cache_df.drop(columns=to_drop)
     cache_rank_df = cache_df.rank(axis=0, ascending=False)
 
