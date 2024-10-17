@@ -1,4 +1,8 @@
-from config import *
+from config import project_configuration
+import os
+from PIL import Image
+import numpy as np
+import json
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -22,6 +26,35 @@ def load_data():
 
 
 df, rank_df = load_data()
+
+
+def get_image(tomo, image, projection=False):
+    image_dir = image.split("_")[0]
+    if projection:
+        img_path = os.path.join(project_configuration["root"], project_configuration["image_dir"], f"{image_dir}_projection", f"{tomo}_{image}.png")
+    else:
+        img_path = os.path.join(project_configuration["root"], project_configuration["image_dir"], image_dir, f"{tomo}_{image}.png")
+    if os.path.exists(img_path):
+        return Image.open(img_path)
+    else:
+        return Image.fromarray(np.zeros((128, 128)), mode='L')
+
+
+def recolor(color, style=0):
+    if style == 0:
+        return (np.array(color) / 2.0 + 0.5)
+    if style == 1:
+        return (np.array(color) / 8 + 0.875)
+    else:
+        return color
+
+
+def load_config():
+    with open(os.path.join(os.getcwd(), "project_configuration.json"), 'r') as f:
+        project_configuration = json.load(f)
+    return project_configuration
+
+
 
 def rank_distance_series(tomo_name, rank_df):
     m_ranks = rank_df.loc[tomo_name]
