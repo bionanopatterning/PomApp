@@ -62,11 +62,11 @@ def ontology_summary(df, ontology):
     c1, c2 = st.columns(2)
     with c1:
         top_caption_link = f"/Browse_tomograms?tomo_id={tomo_top}"
-        st.image(get_image(tomo_top, "density"), caption=f"High {ontology} content:", use_column_width=True)
+        st.image(get_image(tomo_top, "density").transpose(Image.FLIP_TOP_BOTTOM), caption=f"High {ontology} content:", use_column_width=True)
         st.markdown(f"<p style='text-align: center;margin-top: -20px;font-size: 13px;'><a href='{top_caption_link}'>{tomo_top}</a></p>", unsafe_allow_html=True)
     with c2:
         bot_caption_link = f"/Browse_tomograms?tomo_id={tomo_bot}"
-        st.image(get_image(tomo_bot, "density"), caption=f"Low {ontology} content:", use_column_width=True)
+        st.image(get_image(tomo_bot, "density").transpose(Image.FLIP_TOP_BOTTOM), caption=f"Low {ontology} content:", use_column_width=True)
         st.markdown(f"<p style='text-align: center;margin-top: -20px;font-size: 13px;'><a href='{bot_caption_link}'>{tomo_bot}</a></p>", unsafe_allow_html=True)
 
 
@@ -86,7 +86,7 @@ with c2:
     #st.markdown(f"**What do we do when the volume of data becomes unmanagable?**")
 
     st.markdown(f"_**P**roject **O**ntology **M**etasegmentation (**Pom**)_ is an attempt at summarizing and organising large electron cryo-tomography (cryoET) datasets "
-                f"_via_ semi-supervised segmentation of a relatively large number of _macromolecules_ and _ontologies_, using the amazing data by Ron Kelley and Sagar Khavnekar et al., available via the [CZI's CryoET Data Portal.](https://cryoetdataportal.czscience.com/datasets/10302)")
+                f"_via_ semi-supervised segmentation of a relatively large number of _macromolecules_ and _ontologies_, using the amazing **data by Ron Kelley and Sagar Khavnekar et al.** of FIB-milled Chlamydomonas reinhardtii tomograms, available via the [CZI's CryoET Data Portal.](https://cryoetdataportal.czscience.com/datasets/10302)")
 
     st.markdown(f"All segmentations, visualizations, and other data shared on these pages, including this summary report, were generated using Pom - a _work-in-progress_ Python cli module for making sense of large datasets.")
 
@@ -135,4 +135,3 @@ with c2:
     ontologies.append("Unknown")
     for o in ontologies:
         ontology_summary(df, o)
-
