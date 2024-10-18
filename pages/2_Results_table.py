@@ -39,9 +39,9 @@ def get_image(tomo, image):
 
 def recolor(color, style=0):
     if style == 0:
-        return (np.array(color) / 2.0 + 0.5)
+        return np.clip((np.array(color) / 2.0 + 0.5), 0.0, 1.0)
     if style == 1:
-        return (np.array(color) / 8 + 0.875)
+        return np.clip((np.array(color) / 8 + 0.875), 0.0, 1.0)
     else:
         return color
 
