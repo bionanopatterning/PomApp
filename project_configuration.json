@@ -9,11 +9,10 @@
   "apix": 15.68,
   "macromolecules": [
     "Density",
-    "Ribosome",
     "Membrane",
-    "RuBisCo",
+    "Ribosome",
     "ATP synthase",
-    "Proteasome"
+    "RuBisCo"
   ],
   "ontologies": [
     "Cytoplasm",
@@ -26,26 +25,37 @@
     "Void",
     "Golgi",
     "Pyrenoid",
-    "Stroma"
+    "Stroma",
+    "Lipid droplet",
+    "Dense layer",
+    "Endoplasmic reticulum",
+    "NPC",
+    "Starch granule",
+    "Cilium",
+    "IFRA",
+    "Cell wall",
+    "Chloroplast membrane"
   ],
   "z_sum": 4,
   "single_model_epochs": 100,
-  "single_model_batch_size": 32,
+  "single_model_batch_size": 64,
   "single_model_overlap": 0.0,
   "single_model_box_size": 256,
-  "shared_model_epochs": 200,
+  "shared_model_epochs": 250,
   "shared_model_batch_size": 64,
   "shared_model_overlap": 0.0,
   "shared_model_box_size": 256,
   "shared_model_unknown_class_threshold": 0.25,
-  "shared_model_unknown_output_thresold": 0.75,
   "tf_distribute_mirrored": true,
   "shared_model_runs_per_volume": 4,
   "GPUS": "0,1,2,3,4,5,6,7",
   "image_size": 1024,
-  "soft_ignore_in_summary": ["Void"],
+  "soft_ignore_in_summary": ["Void", "Unknown"],
   "gallery_categories": ["Macromolecules", "Top3", "density"],
   "raytraced_ontologies": false,
   "camera_pitch": -30.0,
-  "z_margin_summary": 0.3
+  "camera_yaw": -180.0,
+  "silhouette_alpha": 0.5,
+  "silhouette_threshold": 0.01,
+  "z_margin_summary": 0.25
 }

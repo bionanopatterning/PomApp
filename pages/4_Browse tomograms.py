@@ -1,6 +1,6 @@
 import streamlit as st
 import json
-from render import parse_feature_library, FeatureLibraryFeature
+from config import parse_feature_library, FeatureLibraryFeature
 import pandas as pd
 import os
 from PIL import Image
@@ -17,25 +17,28 @@ with open("project_configuration.json", 'r') as f:
     project_configuration = json.load(f)
 
 
+
 def get_image(tomo, image, projection=False):
     image_dir = image.split("_")[0]
     if projection:
-        image_dir += "_projection"
-    img_path = os.path.join("images", image_dir, f"{tomo}_{image}.png")
-    print(img_path)
+        img_path = os.path.join(project_configuration["root"], project_configuration["image_dir"], f"{image_dir}_projection", f"{tomo}_{image}.png")
+    else:
+        img_path = os.path.join(project_configuration["root"], project_configuration["image_dir"], image_dir, f"{tomo}_{image}.png")
     if os.path.exists(img_path):
         return Image.open(img_path)
     else:
         return Image.fromarray(np.zeros((128, 128)), mode='L')
 
 
+
 def recolor(color, style=0):
     if style == 0:
-        return (np.array(color) / 2.0 + 0.5)
-    if style == 1:
-        return (np.array(color) / 8 + 0.875)
+        c = (np.array(color) / 2.0 + 0.5)
+    elif style == 1:
+        c = (np.array(color) / 8 + 0.875)
     else:
-        return color
+        c = color
+    return np.clip(c, 0.0, 1.0)
 
 
 feature_library = parse_feature_library("feature_library.txt")
@@ -45,7 +48,7 @@ def load_data():
     cache_df = pd.read_excel(os.path.join(project_configuration["root"], "summary.xlsx"), index_col=0)
     cache_df = cache_df.dropna(axis=0)
     to_drop = list()
-    for f in project_configuration["macromolecules"] + ["Thickness (nm)", "Thickness error (nm)"]:
+    for f in project_configuration["macromolecules"]:
         if f in cache_df.columns:
             to_drop.append(f)
     cache_df = cache_df.drop(columns=to_drop)
@@ -122,11 +125,12 @@ with column_base:
 
     st.text("")
     ontologies = df.loc[tomo_name].sort_values(ascending=False).index.tolist()
-    for o in project_configuration["macromolecules"] + project_configuration["soft_ignore_in_summary"]:
+    for o in ontologies:
+        if o not in project_configuration["ontologies"] + ["Unknown"]:
+            ontologies.remove(o)
+    for o in project_configuration["soft_ignore_in_summary"] + ["Unknown"]:
         if o in ontologies:
             ontologies.remove(o)
-    for o in project_configuration["soft_ignore_in_summary"]:
-        if o not in ontologies:
             ontologies.append(o)
 
     n_imgs_per_row = 5

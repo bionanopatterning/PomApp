@@ -73,13 +73,16 @@ n_macromolecules = len(project_configuration["macromolecules"])
 if "Density" in project_configuration["macromolecules"]:
     n_macromolecules -= 1
 st.markdown(f"The table below lists measurements of the fraction of a tomogram's volume occupied by each of **{n_ontologies} ontology** segmentations and **{n_macromolecules} macromolecule** segmentations.")
+
 st.markdown(f"Click a **header** element to sort by that feature, or a **tomogram name** to inspect that volume.")
+
 
 search_query = st.text_input("Search Tomogram by name")
 if search_query:
     filtered_df = copy_df[copy_df['Tomogram'].str.contains(search_query, case=False, na=False)]
 else:
     filtered_df = copy_df
+
 
 
 numerical_columns = filtered_df.select_dtypes(include=[np.number]).columns.tolist()
@@ -156,3 +159,10 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+with open('summary.xlsx', 'rb') as f:
+    st.download_button(label="Download summary (.xslx)",
+                       data=f,
+                       file_name="Pom-summary.xlsx",
+                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                       key="downloadButton")

@@ -15,10 +15,17 @@ with open("project_configuration.json", 'r') as f:
 
 
 def get_image(tomo, image):
-    image_dir = image.split("_")[0]
-    img_path = os.path.join("images", image_dir, f"{tomo}_{image}.png")
+    image_tag = image.split(" projection")[0]
+    image_dir = image_tag
+    if "projection" in image:
+        image_dir = image_tag+"_projection"
+    img_path = os.path.join(project_configuration["image_dir"], image_dir, f"{tomo}_{image_tag}.png")
+
     if os.path.exists(img_path):
-        return Image.open(img_path)
+        out_img = Image.open(img_path)
+        if "density" in image or "projection" in image:
+            out_img = out_img.transpose(Image.FLIP_TOP_BOTTOM)
+        return out_img
     else:
         return Image.fromarray(np.zeros((128, 128)), mode='L')
 
@@ -50,7 +57,7 @@ def reset_page_number():
 # Title and info text
 st.title("Tomogram Gallery")
 st.write(
-    "Browse through the collection of tomograms. Use the search bar to filter tomograms by name. You can choose to view either **Macromolecules** or **Top3 ontologies** 3D renders.")
+    "Browse through the collection of tomograms. Use the search bar to filter tomograms by name. Different visualizations can be selected under 'Display option'.")
 
 # Search bar and display option
 col1, col2 = st.columns([3, 1])
@@ -64,14 +71,13 @@ with col1:
     )
 
 with col2:
-    options = project_configuration["gallery_categories"]
+    options = project_configuration["gallery_categories"] + [f"{o} projection" for o in project_configuration["ontologies"] + ["Unknown"]]
     index = options.index(st.session_state.display_option) if 'display_option' in st.session_state else 0
     display_option = st.selectbox(
         "Display option",
         options,
         index=index,
-        key='display_option',
-        on_change=reset_page_number
+        key='display_option'
     )
 
 # Filter tomograms based on search query
@@ -84,7 +90,9 @@ if not tomogram_names:
     st.write("No tomograms found matching the search query.")
 else:
     # Pagination variables
-    tomograms_per_page = 16
+    n_cols = 4
+    n_rows = 6
+    tomograms_per_page = n_cols * n_rows
     total_pages = (len(tomogram_names) - 1) // tomograms_per_page + 1
 
     # Ensure page number is within valid range
@@ -99,7 +107,7 @@ else:
     tomograms_to_display = tomogram_names[start_idx:end_idx]
 
     # Display images in a 4x4 grid
-    n_cols = 4
+
     for idx in range(0, len(tomograms_to_display), n_cols):
         tomos_in_row = tomograms_to_display[idx:idx + n_cols]
         cols = st.columns(n_cols)
@@ -120,6 +128,7 @@ else:
 
 
     # Pagination buttons
+
     def prev_page():
         if st.session_state.page_num > 0:
             st.session_state.page_num -= 1
