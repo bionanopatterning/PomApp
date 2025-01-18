@@ -72,7 +72,7 @@ n_ontologies = len(project_configuration["ontologies"]) + 1
 n_macromolecules = len(project_configuration["macromolecules"])
 if "Density" in project_configuration["macromolecules"]:
     n_macromolecules -= 1
-st.markdown(f"The table below lists measurements of the fraction of a tomogram's volume occupied by each of **{n_ontologies} ontology** segmentations and **{n_macromolecules} macromolecule** segmentations.")
+st.markdown(f"The table below lists measurements of the fraction of a tomogram's volume occupied by each of **{n_ontologies + n_macromolecules}** segmented features.")
 
 st.markdown(f"Click a **header** element to sort by that feature, or a **tomogram name** to inspect that volume.")
 
