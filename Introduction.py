@@ -59,9 +59,11 @@ with c2:
 
     st.text(f"{len(df)} tomograms, {len(macromolecules)} macromolecules, {len(ontologies) + 1} organelles & subcellular niches, {n_volumes} volumes.")
 
-    st.markdown(f"_**Pom**_ is an attempt at summarizing and organising large electron cryo-tomography (cryoET) datasets using semi-supervised, large scale, and comprehensive segmentation, using the amazing **data by Ron Kelley and Sagar Khavnekar et al.** of FIB-milled Chlamydomonas reinhardtii tomograms, which is available via the [CryoET Data Portal](https://cryoetdataportal.czscience.com/datasets/10302)")
+    st.markdown(f"**Pom** is an attempt at summarizing and organising large electron cryo-tomography (cryoET) datasets using semi-supervised, large scale, and comprehensive segmentation, tested on the amazing **data by Ron Kelley and Sagar Khavnekar et al.** of FIB-milled Chlamydomonas reinhardtii tomograms, which is available via the [CryoET Data Portal](https://cryoetdataportal.czscience.com/datasets/10302) and on [EMPIAR](https://www.ebi.ac.uk/empiar/EMPIAR-11830/).")
 
     st.markdown(f"All segmentations, visualizations, and other data shared on these pages, including this summary report, were generated using _**[Ais](https://elifesciences.org/reviewed-preprints/98552)**_ and _**Pom**_ - a _work-in-progress_ Python cli module for making sense of large datasets.")
+
+    st.markdown(f"**Our preprint is now available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2025.01.16.633326v1)**")
 
     st.text("")
     st.markdown(f'<div style="text-align: center;"><b>At a glance: ensemble composition of {len(df)} tomograms</b></div>', unsafe_allow_html=True)
